@@ -3,28 +3,37 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    background-color: #2b4f6d;
+    flex-direction: column;
+    font-family: Helvetica;
+    color: #ffffff;
 }
 
 .board {
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     grid-template-columns: repeat(3, 1fr);
-    width: 50%;
-    height: 50%;
+    width: 50vh;
+    height: 50vh;
+    background-color: #4591d3;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: black 0px 8px 24px;
 }
 
 .cell {
-    border: 5px solid #000000;
+    border: 5px solid #ffffff;
     display: flex;
     justify-content: center;
     align-items: stretch;
 }
 
 .piece {
-    font-size: 64px;
+    font-size: 80px;
     border: none;
-    background-color: #ffffff;
+    background-color: #4591d3;
     flex: 1;
+    color: #ffffff;
 }
 
 .left {
@@ -41,4 +50,9 @@ body {
 
 .bottom {
     border-bottom: none;
+}
+
+.output {
+    margin: 50px;
+    font-size: 18px;
 }

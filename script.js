@@ -14,13 +14,13 @@ const Gameboard = (function() {
         }
     }
 
-    function displayBoard() {
-        for(let i = 0; i < 3; i++)
-            {
-                console.log(`${board[i][0].getState()} | ${board[i][1].getState()} | ${board[i][2].getState()}`)
-                console.log("-------")
-            }
-    }
+    // function displayBoard() {
+    //     for(let i = 0; i < 3; i++)
+    //         {
+    //             DisplayManager.writeToOutput(`${board[i][0].getState()} | ${board[i][1].getState()} | ${board[i][2].getState()}`)
+    //             DisplayManager.writeToOutput("-------")
+    //         }
+    // }
 
     function place(row, col, player) {
         if(board[row][col].isOccupied()) {
@@ -34,7 +34,7 @@ const Gameboard = (function() {
     }
 
     initializeBoard();
-    return {getBoard, displayBoard, place};
+    return {getBoard, place};
 })();
 
 const DisplayManager = (function() {
@@ -64,11 +64,16 @@ const DisplayManager = (function() {
         }
     }
 
+    function writeToOutput(message) {
+        const output = document.querySelector(".output");
+        output.textContent = message;
+    }
+
     const pieceList = document.querySelectorAll(".piece");
     const domBoard = [[], [], []];
     initializeDisplay();
 
-    return {updateDisplay};
+    return {updateDisplay, writeToOutput};
 
 })();
 
@@ -117,7 +122,7 @@ const GameManager = (function() {
     }
 
     function displayInfo() {
-        console.log(`Current turn: ${currentPlayer.getName()} - ${currentPlayer.getSymbol()}`);
+        DisplayManager.writeToOutput(`Current turn: ${currentPlayer.getName()} - ${currentPlayer.getSymbol()}`);
     }
 
     function playMove(row, col) {
@@ -126,27 +131,24 @@ const GameManager = (function() {
                 switchPlayer();
                 turnCount++;
                 if(checkWin()) {
-                    Gameboard.displayBoard();
                     DisplayManager.updateDisplay();
-                    console.log(`${checkWin().getName()} Wins!`);         
+                    DisplayManager.writeToOutput(`${checkWin().getName()} Wins!`);         
                 }
                 else if (checkForTie()) {
-                    Gameboard.displayBoard();
                     DisplayManager.updateDisplay();
-                    console.log(`It's a tie!`);   
+                    DisplayManager.writeToOutput(`It's a tie!`);   
                 } else {
-                    Gameboard.displayBoard();
                     DisplayManager.updateDisplay();
                     displayInfo();
                 }
             }
             else {
-                console.log("Invalid Move");
+                DisplayManager.writeToOutput("Invalid Move");
                 displayInfo();
             }
         }
         else {
-            checkWin() ? console.log(`${checkWin().getName()} already won!`) : console.log("It's a tie!"); 
+            checkWin() ? DisplayManager.writeToOutput(`${checkWin().getName()} already won!`) : DisplayManager.writeToOutput("It's a tie!"); 
         }
     }
 
@@ -197,7 +199,6 @@ const GameManager = (function() {
         }
         return null;
     }
-    Gameboard.displayBoard();
     DisplayManager.updateDisplay();
     displayInfo();
 
