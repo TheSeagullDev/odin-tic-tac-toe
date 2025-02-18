@@ -1,0 +1,44 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.board {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    width: 50%;
+    height: 50%;
+}
+
+.cell {
+    border: 5px solid #000000;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.piece {
+    font-size: 64px;
+    border: none;
+    background-color: #ffffff;
+    flex: 1;
+}
+
+.left {
+    border-left: none;
+}
+
+.top {
+    border-top: none;
+}
+
+.right {
+    border-right: none;
+}
+
+.bottom {
+    border-bottom: none;
+}

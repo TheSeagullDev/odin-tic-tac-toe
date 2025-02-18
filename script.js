@@ -37,6 +37,41 @@ const Gameboard = (function() {
     return {getBoard, displayBoard, place};
 })();
 
+const DisplayManager = (function() {
+
+    
+    function initializeDisplay() {
+        for(let row = 1; row <= 3; row++) {
+            for(let col = 1; col <= 3; col++) {
+                domBoard[row-1].push(pieceList[col - 1 + 3*(row-1)]);
+            }
+        }
+
+        for(let row = 0; row < 3; row++) {
+            for(let col = 0; col < 3; col++) {
+                domBoard[row][col].addEventListener("click", () => {
+                    GameManager.playMove(row, col);
+                })
+            }
+        }
+    }
+
+    function updateDisplay() {
+        for(let row = 0; row < 3; row++) {
+            for(let col = 0; col < 3; col++) {
+                domBoard[row][col].textContent = Gameboard.getBoard()[row][col].getState();
+            }
+        }
+    }
+
+    const pieceList = document.querySelectorAll(".piece");
+    const domBoard = [[], [], []];
+    initializeDisplay();
+
+    return {updateDisplay};
+
+})();
+
 function Piece(row, col) {
     let occupied = false;
     let state = "";
@@ -92,13 +127,16 @@ const GameManager = (function() {
                 turnCount++;
                 if(checkWin()) {
                     Gameboard.displayBoard();
+                    DisplayManager.updateDisplay();
                     console.log(`${checkWin().getName()} Wins!`);         
                 }
                 else if (checkForTie()) {
                     Gameboard.displayBoard();
+                    DisplayManager.updateDisplay();
                     console.log(`It's a tie!`);   
                 } else {
                     Gameboard.displayBoard();
+                    DisplayManager.updateDisplay();
                     displayInfo();
                 }
             }
@@ -160,9 +198,8 @@ const GameManager = (function() {
         return null;
     }
     Gameboard.displayBoard();
+    DisplayManager.updateDisplay();
     displayInfo();
 
     return {getCurrentPlayer, switchPlayer, playMove, checkWin};
 })();
-
-// Test code
