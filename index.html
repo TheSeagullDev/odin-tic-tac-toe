@@ -38,6 +38,20 @@
             <button class="piece"></button>
         </div>
     </div>
-    <div class="output"></div>
+    <div class="output">Current turn: Player One - X</div>
+    <div class="controls">
+        <button class="reset">Reset</button>
+        <button class="changeNames">Change Names</button>
+    </div>
+    <dialog>
+        <form method="dialog">
+            <label for="nameOne">P1 name: </label>
+            <input type="text" name="nameOne" id="nameOne">
+            <label for="nameTwo">P2 name: </label>
+            <input type="text" name="nameTwo" id="nameTwo">
+            <input type="button" value="Close" id="close">
+            <input type="submit" value="Submit" id="submit">
+        </form>
+    </dialog>
 </body>
 </html>

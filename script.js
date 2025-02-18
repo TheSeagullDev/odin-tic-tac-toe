@@ -33,13 +33,15 @@ const Gameboard = (function() {
         }
     }
 
+    function resetBoard() {
+        initializeBoard();
+    }
+
     initializeBoard();
-    return {getBoard, place};
+    return {getBoard, place, resetBoard};
 })();
 
-const DisplayManager = (function() {
-
-    
+const DisplayManager = (function() { 
     function initializeDisplay() {
         for(let row = 1; row <= 3; row++) {
             for(let col = 1; col <= 3; col++) {
@@ -72,46 +74,25 @@ const DisplayManager = (function() {
     const pieceList = document.querySelectorAll(".piece");
     const domBoard = [[], [], []];
     initializeDisplay();
+    
 
     return {updateDisplay, writeToOutput};
 
 })();
 
-function Piece(row, col) {
-    let occupied = false;
-    let state = "";
-
-    const getState = () => state;
-    const getRow = () => row;
-    const getCol = () => col;
-    const isOccupied = () => occupied;
-    function setState(newState) {
-        state = newState;
-        occupied = true;
-    }
-    
-    return {getState, getRow, getCol, isOccupied, setState};
-}
-
-function Player(name, symbol) {
-    const getName = () => name;
-    const getSymbol = () => symbol;
-
-    return {getName, getSymbol};
-}
-
-const GameManager = (function() {
+const GameManager = (function() {  
     let turnCount = 0;
 
-    const playerOneName = "Player One";
-    const playerTwoName = "Player Two";
+    let playerOneName = "Player One";
+    let playerTwoName = "Player Two";
 
-    const playerOne = Player(playerOneName, "X");
-    const playerTwo = Player(playerTwoName, "O");
+    let playerOne = Player(playerOneName, "X");
+    let playerTwo = Player(playerTwoName, "O");
 
     let currentPlayer = playerOne;
 
     const getCurrentPlayer = () => currentPlayer;
+    const resetPlayer = () => currentPlayer = playerOne;
 
     function switchPlayer() {
         if(currentPlayer.getSymbol() === playerOne.getSymbol()) {
@@ -199,8 +180,68 @@ const GameManager = (function() {
         }
         return null;
     }
-    DisplayManager.updateDisplay();
-    displayInfo();
+
+    function reset() {
+        resetPlayer();
+        Gameboard.resetBoard();
+        turnCount = 0;
+        DisplayManager.updateDisplay();
+    }
+
+    const resetBtn = document.querySelector(".reset");
+    resetBtn.addEventListener("click", reset);
+
+    const changeNames = document.querySelector(".changeNames");
+    const close = document.getElementById("close");
+    const formContainer = document.querySelector("dialog");
+    const form = document.querySelector("form");
+
+    changeNames.addEventListener("click", () => {
+        formContainer.showModal();
+        form.nameOne.value = playerOneName;
+        form.nameTwo.value = playerTwoName;
+    });
+
+    close.addEventListener("click", () => {
+        formContainer.close();
+    });
+
+    form.addEventListener("submit", () => {
+        playerOneName = form.nameOne.value;
+        playerTwoName = form.nameTwo.value;
+
+        playerOne.setName(playerOneName);
+        playerTwo.setName(playerTwoName);
+
+        form.reset();
+        displayInfo();
+    });
 
     return {getCurrentPlayer, switchPlayer, playMove, checkWin};
 })();
+
+
+
+function Piece(row, col) {
+    let occupied = false;
+    let state = "";
+
+    const getState = () => state;
+    const getRow = () => row;
+    const getCol = () => col;
+    const isOccupied = () => occupied;
+    function setState(newState) {
+        state = newState;
+        occupied = true;
+    }
+    
+    return {getState, getRow, getCol, isOccupied, setState};
+}
+
+function Player(name, symbol) {
+    const getName = () => name;
+    const setName = (newName) => name = newName; 
+    const getSymbol = () => symbol;
+
+    return {getName, getSymbol, setName};
+}

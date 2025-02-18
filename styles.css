@@ -56,3 +56,35 @@ body {
     margin: 50px;
     font-size: 18px;
 }
+
+.controls button, input[type="submit"], input[type="button"] {
+    background-color: #4591d3;
+    border: none;
+    padding: 15px 30px;
+    margin: 10px;
+    border-radius: 15px;
+    color: #ffffff;
+    box-shadow: #111010 0px 1px 5px;
+}
+
+dialog {
+    background-color: #315b7e;
+    color: #ffffff;
+    border: none;
+    border-radius: 15px;
+    box-shadow: black 0px 8px 24px;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+input[type="text"] {
+    border-radius: 8px;
+    border: none;
+    background-color: #4591d3;
+    color: #ffffff;
+    padding: 10px;
+}
