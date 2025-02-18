@@ -61,6 +61,8 @@ function Player(name, symbol) {
 }
 
 const GameManager = (function() {
+    let turnCount = 0;
+
     const playerOneName = "Player One";
     const playerTwoName = "Player Two";
 
@@ -86,17 +88,60 @@ const GameManager = (function() {
     function playMove(row, col) {
         if(Gameboard.place(row, col, currentPlayer)){
             switchPlayer();
-            Gameboard.displayBoard();
-            displayInfo();
+            if(checkWin()) {
+                Gameboard.displayBoard();
+                console.log(`${checkWin().getName()} Wins!`);         
+            }
+            else {
+                displayInfo();
+                Gameboard.displayBoard();
+            }
         }
         else {
             console.log("Invalid Move");
             displayInfo();
         }
+        turnCount++;
     }
 
+    function checkForTie() {
+        return turnCount >= 9;
+    }
+
+    function checkLine(boardArr) {
+        for(let i = 0; i < 2; i++) {
+            if(boardArr[i].getState() !== boardArr[i+1].getState()) {
+                return false;
+            }
+        }
+        if(boardArr[0].isOccupied()) {
+            return boardArr[0].getState() === "X" ? playerOne : console.log("p2");
+        }
+        return false;
+    }
+    //assumes tie has already been checked - return player object for win, null for keep playing
+    function checkWin() {
+        if(turnCount >= 3) {
+            const board = Gameboard.getBoard();
+            const diagArrs = [[board[0][0], board[1][1], board[2][2]], [board[2][0], board[1][1], board[0][2]]];
+            //check diagonals
+            for(let i = 0; i < 2; i++) {
+                if(checkLine(diagArrs[i])) {
+                    return checkLine(diagArrs[i]);
+                }
+            }
+        }
+        return null;
+    }
     displayInfo();
     Gameboard.displayBoard();
 
-    return {getCurrentPlayer, switchPlayer, playMove};
+    return {getCurrentPlayer, switchPlayer, playMove, checkWin};
 })();
+
+// Test code
+// GameManager.playMove(0,0);
+// GameManager.playMove(1,0);
+// GameManager.playMove(1,1);
+// GameManager.playMove(0,2);
+// GameManager.playMove(2,2);
