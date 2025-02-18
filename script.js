@@ -86,22 +86,30 @@ const GameManager = (function() {
     }
 
     function playMove(row, col) {
-        if(Gameboard.place(row, col, currentPlayer)){
-            switchPlayer();
-            if(checkWin()) {
-                Gameboard.displayBoard();
-                console.log(`${checkWin().getName()} Wins!`);         
+        if(!checkWin() && !checkForTie()) {
+            if(Gameboard.place(row, col, currentPlayer)){
+                switchPlayer();
+                turnCount++;
+                if(checkWin()) {
+                    Gameboard.displayBoard();
+                    console.log(`${checkWin().getName()} Wins!`);         
+                }
+                else if (checkForTie()) {
+                    Gameboard.displayBoard();
+                    console.log(`It's a tie!`);   
+                } else {
+                    Gameboard.displayBoard();
+                    displayInfo();
+                }
             }
             else {
+                console.log("Invalid Move");
                 displayInfo();
-                Gameboard.displayBoard();
             }
         }
         else {
-            console.log("Invalid Move");
-            displayInfo();
+            checkWin() ? console.log(`${checkWin().getName()} already won!`) : console.log("It's a tie!"); 
         }
-        turnCount++;
     }
 
     function checkForTie() {
@@ -115,33 +123,46 @@ const GameManager = (function() {
             }
         }
         if(boardArr[0].isOccupied()) {
-            return boardArr[0].getState() === "X" ? playerOne : console.log("p2");
+            return boardArr[0].getState() === "X" ? playerOne : playerTwo;
         }
         return false;
     }
-    //assumes tie has already been checked - return player object for win, null for keep playing
+    //return player object for win, null for keep playing
     function checkWin() {
         if(turnCount >= 3) {
             const board = Gameboard.getBoard();
             const diagArrs = [[board[0][0], board[1][1], board[2][2]], [board[2][0], board[1][1], board[0][2]]];
+            const cols = [[], [], []];
             //check diagonals
             for(let i = 0; i < 2; i++) {
                 if(checkLine(diagArrs[i])) {
                     return checkLine(diagArrs[i]);
                 }
             }
+            //check rows
+            for(let i = 0; i < 3; i++) {
+                if(checkLine(board[i])) {
+                    return checkLine(board[i]);
+                }
+            }
+            //check cols
+            for(let col = 0; col < 3; col++) {
+                for(let row = 0; row < 3; row++) {
+                    cols[col].push(board[row][col]);
+                }
+            }
+            for(let i = 0; i < 3; i++) {
+                if(checkLine(cols[i])) {
+                    return checkLine(cols[i]);
+                }
+            }
         }
         return null;
     }
-    displayInfo();
     Gameboard.displayBoard();
+    displayInfo();
 
     return {getCurrentPlayer, switchPlayer, playMove, checkWin};
 })();
 
 // Test code
-// GameManager.playMove(0,0);
-// GameManager.playMove(1,0);
-// GameManager.playMove(1,1);
-// GameManager.playMove(0,2);
-// GameManager.playMove(2,2);
